@@ -1,21 +1,15 @@
-import { test, request, expect, APIRequestContext } from "@playwright/test";
+import { test, request, expect } from "@playwright/test";
 import { loginAndGetToken } from "../helpers/auth.helper";
+import { deleteAirlineById, postAirline } from "../helpers/airline.helper";
 
-let apiContext: APIRequestContext;
 let createdAirlineId: string;
+let token: string;
 
-test.beforeEach(async ({ baseURL }) => {
-  // 1. Login และสร้าง context พร้อม token
-  const token = await loginAndGetToken();
+test.beforeEach(async () => {
+  // 1. Login
+  token = await loginAndGetToken();
 
-  apiContext = await request.newContext({
-    extraHTTPHeaders: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-
-  // 2. สร้าง airline ชั่วคราว
+  // 2. เตรียม Airline
   const newAirline = {
     carrierCode: "ANA" + Date.now(),
     airlineName: "All Nippon Airways " + Date.now(),
@@ -25,27 +19,15 @@ test.beforeEach(async ({ baseURL }) => {
     isLowCost: false,
   };
 
-  const res = await apiContext.post(
-    `${baseURL}/api/v1/airline-core-api/airline`,
-    {
-      data: newAirline,
-    }
-  );
+  // 3. Post airline ด้วย helper
+  const { res, body } = await postAirline(newAirline, token);
 
-  const body = await res.json();
   expect(res.status()).toBe(201);
   createdAirlineId = body.data._id;
 });
 
-test("DELETE /airline should delete the created airline", async ({
-  baseURL,
-}) => {
-  // เรียก DELETE อีกครั้งเพื่อตรวจการลบด้วยตัวเอง
-  const res = await apiContext.delete(
-    `${baseURL}/api/v1/airline-core-api/airline/${createdAirlineId}`
-  );
-
-  const body = await res.json();
+test("DELETE /airline should delete the created airline", async () => {
+  const { res, body } = await deleteAirlineById(createdAirlineId, token);
 
   expect(res.status()).toBe(200);
   expect(body.status).toBe("success");

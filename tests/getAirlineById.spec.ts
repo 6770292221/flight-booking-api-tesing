@@ -1,14 +1,11 @@
 import { test, request, expect } from "@playwright/test";
+import { getAirlineById } from "../helpers/airline.helper";
 
-test("should return correct airline by ID", async ({ baseURL }) => {
-  // เรียก API /airline/:id
+test("should return correct airline by ID", async () => {
   const airlineId = "67fa2f6d208cdb649f55f757";
-  const apiContext = await request.newContext({});
 
-  const res = await apiContext.get(
-    `${baseURL}/api/v1/airline-core-api/airline/${airlineId}`
-  );
-  const body = await res.json();
+  // เรียก helper โดยส่ง context + id
+  const { res, body } = await getAirlineById(airlineId);
 
   // Assertion
   expect(res.status()).toBe(200);

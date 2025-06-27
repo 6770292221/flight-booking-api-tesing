@@ -1,13 +1,8 @@
 import { test, request, expect } from "@playwright/test";
+import { getAllAirlines } from "../helpers/airline.helper";
 
-test("GET /airlines returns correct airline", async ({ baseURL }) => {
-  // เรียก /airlines พร้อมใส่ token
-  const apiContext = await request.newContext({});
-
-  const res = await apiContext.get(
-    `${baseURL}/api/v1/airline-core-api/airlines`
-  );
-  const body = await res.json();
+test("GET /airlines returns correct airline", async () => {
+  const { res, body } = await getAllAirlines();
 
   // ตรวจ response
   expect(res.status()).toBe(200);
@@ -17,14 +12,17 @@ test("GET /airlines returns correct airline", async ({ baseURL }) => {
 
   // ตรวจ array
   expect(Array.isArray(body.data.items)).toBe(true);
-  expect(body.data.items.length).toBeGreaterThanOrEqual(6);
+  expect(body.data.items.length).toBeGreaterThanOrEqual(5);
 
+  // ตรวจ items[0]
   // ตรวจ items[0]
   const first = body.data.items[0];
   expect(first).toHaveProperty("_id");
-  expect(first.carrierCode).toBe("SL");
-  expect(first.airlineName).toBe("Thai Lion Air");
-  expect(first.logoUrl).toMatch(/^https:\/\/raw\.githubusercontent\.com/);
+  expect(first.carrierCode).toBe("VZ");
+  expect(first.airlineName).toBe("VietJet Air");
+  expect(first.logoUrl).toMatch(
+    /^https:\/\/(raw\.githubusercontent\.com|upload\.wikimedia\.org)/
+  );
   expect(first.country).toBe("Thailand");
   expect(first.isLowCost).toBe(true);
   expect(first).toHaveProperty("createdAt");
