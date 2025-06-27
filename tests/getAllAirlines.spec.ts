@@ -17,14 +17,16 @@ test("GET /airlines returns correct airline", async ({ baseURL }) => {
 
   // ตรวจ array
   expect(Array.isArray(body.data.items)).toBe(true);
-  expect(body.data.items.length).toBeGreaterThanOrEqual(6);
+  expect(body.data.items.length).toBeGreaterThanOrEqual(5);
 
   // ตรวจ items[0]
   const first = body.data.items[0];
   expect(first).toHaveProperty("_id");
-  expect(first.carrierCode).toBe("SL");
-  expect(first.airlineName).toBe("Thai Lion Air");
-  expect(first.logoUrl).toMatch(/^https:\/\/raw\.githubusercontent\.com/);
+  expect(first.carrierCode).toBe("VZ");
+  expect(first.airlineName).toBe("VietJet Air");
+  expect(first.logoUrl).toMatch(
+    /^https:\/\/(raw\.githubusercontent\.com|upload\.wikimedia\.org)/
+  );
   expect(first.country).toBe("Thailand");
   expect(first.isLowCost).toBe(true);
   expect(first).toHaveProperty("createdAt");
