@@ -3,6 +3,9 @@ import { request } from "@playwright/test";
 
 export async function loginAndGetToken(): Promise<string> {
   const baseURL = process.env.BASE_URL!;
+  const email = process.env.OTP_EMAIL!;
+  const password = process.env.OTP_PASSWORD!;
+
   const context = await request.newContext();
 
   // Step 1: login (trigger OTP)
@@ -10,10 +13,7 @@ export async function loginAndGetToken(): Promise<string> {
     `${baseURL}/api/v1/user-core-api/auth/login`,
     {
       headers: { "Content-Type": "application/json" },
-      data: {
-        email: "aphirak_2008@hotmail.com",
-        password: "Com@sci54",
-      },
+      data: { email, password },
     }
   );
 

@@ -1,30 +1,53 @@
 import { test, request, expect } from "@playwright/test";
 import { getAllAirlines } from "../helpers/airline.helper";
+import {
+  expectStatus,
+  expectValues,
+  expectIsArrayWithMinLength,
+  expectObjectHasFields,
+  expectObjectFieldValues,
+  expectFieldMatches,
+} from "../helpers/assert.helper";
 
 test("GET /airlines returns correct airline", async () => {
   const { res, body } = await getAllAirlines();
 
   // ตรวจ response
-  expect(res.status()).toBe(200);
-  expect(body.status).toBe("success");
-  expect(body.code).toBe("AIR_1004");
-  expect(body.message).toBe("Airports retrieved successfully.");
+  await expectStatus(res, 200);
+  expectValues(body, {
+    status: "success",
+    code: "AIR_1004",
+    message: "Airports retrieved successfully.",
+  });
 
   // ตรวจ array
-  expect(Array.isArray(body.data.items)).toBe(true);
-  expect(body.data.items.length).toBeGreaterThanOrEqual(5);
+  const items = body.data.items;
+  expectIsArrayWithMinLength(items, 5);
 
-  // ตรวจ items[0]
-  // ตรวจ items[0]
-  const first = body.data.items[0];
-  expect(first).toHaveProperty("_id");
-  expect(first.carrierCode).toBe("VZ");
-  expect(first.airlineName).toBe("VietJet Air");
-  expect(first.logoUrl).toMatch(
+  // ตรวจ fields ของ item[0]
+  expectObjectHasFields(items[0], [
+    "_id",
+    "carrierCode",
+    "airlineName",
+    "logoUrl",
+    "country",
+    "isLowCost",
+    "updatedAt",
+    "createdAt",
+  ]);
+
+  // ตรวจค่าที่คาดหวัง
+  expectValues(items[0], {
+    carrierCode: "DD",
+    airlineName: "Nok Air",
+    country: "Thailand",
+    isLowCost: true,
+  });
+
+  // ตรวจ logoUrl
+  expectFieldMatches(
+    items[0],
+    "logoUrl",
     /^https:\/\/(raw\.githubusercontent\.com|upload\.wikimedia\.org)/
   );
-  expect(first.country).toBe("Thailand");
-  expect(first.isLowCost).toBe(true);
-  expect(first).toHaveProperty("createdAt");
-  expect(first).toHaveProperty("updatedAt");
 });

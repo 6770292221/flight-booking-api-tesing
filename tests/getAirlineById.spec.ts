@@ -1,5 +1,6 @@
 import { test, request, expect } from "@playwright/test";
 import { getAirlineById } from "../helpers/airline.helper";
+import { expectStatus, expectValues } from "../helpers/assert.helper"; // ปรับตาม path จริงของคุณ
 
 test("should return correct airline by ID", async () => {
   const airlineId = "67fa2f6d208cdb649f55f757";
@@ -8,15 +9,21 @@ test("should return correct airline by ID", async () => {
   const { res, body } = await getAirlineById(airlineId);
 
   // Assertion
-  expect(res.status()).toBe(200);
-  expect(body.status).toBe("success");
-  expect(body.code).toBe("AIR_1004");
-  expect(body.message).toBe("Airports retrieved successfully.");
+  expectStatus(res, 200);
 
-  const data = body.data;
-  expect(data._id).toBe("67fa2f6d208cdb649f55f757");
-  expect(data.carrierCode).toBe("TG");
-  expect(data.airlineName).toBe("Thai Airways International");
-  expect(data.country).toBe("Thailand");
-  expect(data.isLowCost).toBe(true);
+  // เช็ค Body Response หลัก
+  expectValues(body, {
+    status: "success",
+    code: "AIR_1004",
+    message: "Airports retrieved successfully.",
+  });
+
+  // เช็คข้อมูลใน data
+  expectValues(body.data, {
+    _id: "67fa2f6d208cdb649f55f757",
+    carrierCode: "TG",
+    airlineName: "Thai Airways International",
+    country: "Thailand",
+    isLowCost: true,
+  });
 });
