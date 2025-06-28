@@ -5,17 +5,17 @@ export async function expectStatus(res: APIResponse, expected: number) {
   expect(res.status()).toBe(expected);
 }
 
-/** ตรวจว่ามี property (รองรับหลายอัน) */
-export function expectHasProperties(obj: any, props: string[]) {
-  props.forEach((prop) => {
-    expect(obj).toHaveProperty(prop);
-  });
-}
-
 /** ตรวจค่าจริง = ที่คาดไว้ (รองรับหลาย key-value) */
 export function expectValues(actualObj: any, expectedObj: Record<string, any>) {
   for (const key in expectedObj) {
     expect(actualObj[key]).toBe(expectedObj[key]);
+  }
+}
+
+/** ตรวจสอบว่า object มี key/field ที่ระบุอยู่ใน expectedFields ทั้งหมด */
+export function expectObjectHasFields(obj: any, expectedFields: string[]) {
+  for (const field of expectedFields) {
+    expect(obj).toHaveProperty(field);
   }
 }
 
@@ -30,15 +30,6 @@ export function expectMatchRegex(actual: string, pattern: RegExp) {
 export function expectIsArrayWithMinLength(arr: any, minLength: number) {
   expect(Array.isArray(arr)).toBe(true);
   expect(arr.length).toBeGreaterThanOrEqual(minLength);
-}
-
-/**
- * ตรวจสอบว่า object มี key/field ที่ระบุอยู่ใน expectedFields ทั้งหมด
- */
-export function expectObjectHasFields(obj: any, expectedFields: string[]) {
-  for (const field of expectedFields) {
-    expect(obj).toHaveProperty(field);
-  }
 }
 
 /**
