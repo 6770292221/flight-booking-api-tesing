@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:bdd": "cucumber-js --require-module ts-node/register --require features/support/setup.ts --require features/step-definitions/**/*.ts features/**/*.feature"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/6770292221/flight-booking-api-tesing#readme",
   "devDependencies": {
+    "@cucumber/cucumber": "^11.3.0",
     "@playwright/test": "^1.53.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
