@@ -1,0 +1,30 @@
+{
+  "name": "flight-booking-api-tesing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test:bdd": "cucumber-js --require-module ts-node/register --require features/support/setup.ts --require features/step-definitions/**/*.ts features/**/*.feature"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/6770292221/flight-booking-api-tesing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/6770292221/flight-booking-api-tesing/issues"
+  },
+  "homepage": "https://github.com/6770292221/flight-booking-api-tesing#readme",
+  "devDependencies": {
+    "@cucumber/cucumber": "^11.3.0",
+    "@playwright/test": "^1.53.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.0"
+  }
+}
