@@ -58,7 +58,7 @@ Scenario: Retrieve list of airlines and verify first item
       | updatedAt   |
       | createdAt   |
     And the first airline should contain values:
-      | carrierCode | DD        |
+      | carrierCode | VZ        |
       | airlineName | Nok Air   |
       | country     | Thailand  |
       | isLowCost   | true      |
